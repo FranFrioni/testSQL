@@ -1,0 +1,51 @@
+SELECT DISTINCT ProductID, ProductName
+FROM Products
+WHERE ProductID IN (SELECT ProductID FROM [Order Details])
+
+SELECT DISTINCT CustomerId, CompanyName
+FROM Customers
+WHERE CustomerId IN (SELECT CustomerId FROM Orders)
+
+SELECT * 
+FROM Orders 
+WHERE CustomerID IN (
+SELECT CustomerID
+FROM Customers
+WHERE Country = 'Mexico')
+
+SELECT * 
+FROM Employees
+WHERE EmployeeID IN (
+SELECT EmployeeID 
+FROM EmployeeTerritories
+WHERE TerritoryID IN (
+SELECT TerritoryID
+FROM Territories
+WHERE RegionID IN (
+SELECT RegionID
+FROM Region WHERE
+RegionDescription = 'Northern')))
+
+SELECT Categories.CategoryID, CategoryName, SUM(UnitsInStock) AS TotalStock
+FROM Categories
+INNER JOIN Products
+ON Categories.CategoryID = Products.CategoryID
+GROUP BY CategoryName, Categories.CategoryID
+ORDER BY CategoryId
+
+SELECT Customers.CustomerID, Customers.CompanyName, SUM(UnitPrice*Quantity) AS TotalMoney
+FROM ((Customers
+INNER JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID)
+INNER JOIN [Order Details]
+ON Orders.OrderID = [Order Details].OrderID)
+GROUP BY Customers.CompanyName, Customers.CustomerID
+ORDER BY CustomerID
+
+SELECT Categories.CategoryID, CategoryName, SUM(UnitsInStock) AS TotalStock
+INTO ProductosEnStock
+FROM Categories
+INNER JOIN Products
+ON Categories.CategoryID = Products.CategoryID
+GROUP BY CategoryName, Categories.CategoryID
+ORDER BY CategoryID
